@@ -17,8 +17,8 @@ def findLargestClique = {
             def (clique, extended) = [queue.poll(), false]
             network[core].findAll { c -> c !in clique && c !in processed }.each { candidate ->
                 if (network[candidate].containsAll(clique)) {
-                    def clone = clique + candidate
-                    if (clone !in seen) [queue << clone, seen << clone, extended = true]
+                    def next = clique + candidate
+                    if (next !in seen) [queue << next, seen << next, extended = true]
                 }
             }
             if (!extended && clique.size() > result.size()) {
