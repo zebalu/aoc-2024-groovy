@@ -14,7 +14,7 @@ Each input should have unix line endings (a simple `\n` at the end of the line).
 
 ## Expected runtime
 * On "normal" hardware <10 s for every scripts
-* On a Raspberry Pi 4 <1 min for every scripts
+* On a Raspberry Pi 4 <4 min for every scripts (average: ~36 sec)
 
 ## Why is this repo created?
 Simply sharing my code with anybody who is interested. I have created the codes to practice with groovy and to learn new stuff, which I have done a lot.
