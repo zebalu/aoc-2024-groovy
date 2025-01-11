@@ -9,26 +9,25 @@ edges.each {
 def part1 = network.keySet().findAll { it.startsWith('t') }.collectMany { a -> network[a].collectMany { b -> network[a].findAll { c -> c != b && network[b].contains(c) }.collect { c -> [a, b, c] as Set } } }.toSet().size()
 
 println part1
-def findLargestClique = {
-    def (result, processed) = [[] as Set, [] as Set]
-    network.keySet().each { core ->
-        def (queue, seen) = [[[core] as Set] as Queue , [[core] as Set] as Set ]
-        while (queue) {
-            def (clique, extended) = [queue.poll(), false]
-            network[core].findAll { c -> c !in clique && c !in processed }.each { candidate ->
-                if (network[candidate].containsAll(clique)) {
-                    def next = clique + candidate
-                    if (next !in seen) [queue << next, seen << next, extended = true]
-                }
-            }
-            if (!extended && clique.size() > result.size()) {
-                result = clique
+
+def bronKerbosch = {
+    def (result, queue) = [[] as Set, [[[] as Set, network.keySet(), [] as Set]] as Queue]
+    while (queue) {
+        def (clique, candidates, exclude) = queue.poll()
+        if (!candidates && !exclude) {
+            result << clique
+        } else {
+            for (node in candidates as List) {
+                queue << [clique + node, network[node].intersect(candidates), network[node].intersect(exclude)]
+                candidates -= node
+                exclude << node
             }
         }
-        processed << core
     }
     result
 }
+
+def findLargestClique = { bronKerbosch().max { it.size() } }
 
 def part2 = findLargestClique().sort().join(',')
 println part2
