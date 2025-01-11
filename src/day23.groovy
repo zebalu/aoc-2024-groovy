@@ -14,14 +14,10 @@ def bronKerbosch = {
     def (result, queue) = [[] as Set, [[[] as Set, network.keySet(), [] as Set]] as Queue]
     while (queue) {
         def (clique, candidates, exclude) = queue.poll()
-        if (!candidates && !exclude) {
-            result << clique
-        } else {
-            for (node in candidates as List) {
-                queue << [clique + node, network[node].intersect(candidates), network[node].intersect(exclude)]
-                candidates -= node
-                exclude << node
-            }
+        if (!candidates && !exclude) result << clique
+        else for (node in candidates as List) {
+            queue << [clique + node, network[node].intersect(candidates), network[node].intersect(exclude)]
+            (candidates, exclude) = [candidates - node, exclude + node]
         }
     }
     result
